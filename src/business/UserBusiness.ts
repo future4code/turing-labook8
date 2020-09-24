@@ -35,6 +35,27 @@ export class UserBusiness {
         return token;
     }
 
- 
+    async getUserByEmail(user:any) {
+        
+        const userDatabase = new UserDatabase();
+        const userFromDB = await userDatabase.getUserByEmail(user.email);
+
+        if (userFromDB === undefined) {
+            throw new Error('Email ou senha incorretos');
+        }
+
+        const hashManager = new HashManager();
+        const hashCompare = await hashManager.compare(user.password, userFromDB.password);
+        
+        const authenticator = new Authenticator();
+        const accessToken = authenticator.generateToken({ id: userFromDB.id });
+        
+
+        if (!hashCompare) {
+            throw new Error("Email ou senha incorretos");
+        }
+
+        return accessToken;
+    }
 
 }
