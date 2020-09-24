@@ -10,7 +10,7 @@ export const signUp = async (req: Request, res: Response) => {
       const password = req.body.password;
 
       const userBusiness = new UserBusiness();
-    const token = await userBusiness.signUp(name, email, password);
+      const token = await userBusiness.signUp(name, email, password);
 
   
       res.status(200).send({
