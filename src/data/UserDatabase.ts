@@ -30,4 +30,19 @@ export class UserDatabase extends BaseDatabase {
 
     return User.toUserModel(result[0]);
   }
+
+  public async get(): Promise<any[]> {
+    try {
+        const users: any = [];
+        const result = await this.getConnection()
+            .select("*")
+            .from(UserDatabase.TABLE_NAME);
+        for(let user of result){
+            users.push(user);
+        }
+        return users;
+    } catch (error) {
+        throw new Error(error.sqlMessage || error.message);
+    } 
+  }
 }

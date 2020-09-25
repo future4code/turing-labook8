@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UserBusiness } from "../business/UseBusiness";
+import { UserBusiness } from "../business/UserBusiness";
 import { BaseDatabase } from "../data/BaseDatabase";
 
 export const login = async (req: Request, res: Response) => {
