@@ -36,6 +36,7 @@ export class UserBusiness {
         return token;
     }
 
+
     public async makeFriend(token: string, makeFriendshipUserId: string): Promise<void> {
 
         const authenticator = new Authenticator;
@@ -79,6 +80,29 @@ export class UserBusiness {
         const userRelationDatabase = new UserRelationDatabase();
         await userRelationDatabase.undoFriend(userId, undoFriendshipUserId)
         await userRelationDatabase.undoFriend(undoFriendshipUserId, userId)
+    }
+    async getUserByEmail(user:any) {
+        
+        const userDatabase = new UserDatabase();
+        const userFromDB = await userDatabase.getUserByEmail(user.email);
+
+        if (userFromDB === undefined) {
+            throw new Error('Email ou senha incorretos');
+        }
+
+        const hashManager = new HashManager();
+        const hashCompare = await hashManager.compare(user.password, userFromDB.password);
+        
+        const authenticator = new Authenticator();
+        const accessToken = authenticator.generateToken({ id: userFromDB.id });
+        
+
+        if (!hashCompare) {
+            throw new Error("Email ou senha incorretos");
+        }
+
+        return accessToken;
+
     }
 
 }
