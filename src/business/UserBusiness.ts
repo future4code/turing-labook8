@@ -2,6 +2,7 @@ import { IdGenerator } from "../services/IdGenerator";
 import { HashManager } from "../services/HashManager";
 import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
+import { UserRelationDatabase } from "../data/UserRelationDatabase";
 
 export class UserBusiness {
 
@@ -35,6 +36,51 @@ export class UserBusiness {
         return token;
     }
 
+
+    public async makeFriend(token: string, makeFriendshipUserId: string): Promise<void> {
+
+        const authenticator = new Authenticator;
+        const authenticationData = authenticator.verify(token) 
+        const userId = authenticationData.id
+
+        if(!makeFriendshipUserId){
+            throw new Error("Insira um ID válido")
+        }
+
+        const userDatabase = new UserDatabase();
+        const user = await userDatabase.getUserById(makeFriendshipUserId)
+
+        if(!user){
+            throw new Error("Usuário não existe")
+        }
+
+        const userRelationDatabase = new UserRelationDatabase();
+        await userRelationDatabase.makeFriend(userId, makeFriendshipUserId)
+        await userRelationDatabase.makeFriend(makeFriendshipUserId, userId)
+        
+    }
+
+    public async undoFriend(token: string, undoFriendshipUserId: string): Promise<void> {
+
+        const authenticator = new Authenticator;
+        const authenticationData = authenticator.verify(token) 
+        const userId = authenticationData.id
+
+        if(!undoFriendshipUserId){
+            throw new Error("Insira um ID válido")
+        }
+
+        const userDatabase = new UserDatabase();
+        const user = await userDatabase.getUserById(undoFriendshipUserId)
+
+        if(!user){
+            throw new Error("Usuário não existe")
+        }
+
+        const userRelationDatabase = new UserRelationDatabase();
+        await userRelationDatabase.undoFriend(userId, undoFriendshipUserId)
+        await userRelationDatabase.undoFriend(undoFriendshipUserId, userId)
+    }
     async getUserByEmail(user:any) {
         
         const userDatabase = new UserDatabase();
@@ -56,6 +102,7 @@ export class UserBusiness {
         }
 
         return accessToken;
+
     }
 
 }
