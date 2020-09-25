@@ -1,22 +1,15 @@
 import {Request, Response} from "express";
 import {UserBusiness} from "../business/UserBusiness";
 import { Authenticator } from "../services/Authenticator";
+import { FeedDatabase} from "../data/FeedDatabase";
 
 export const getFeed = async (req:  Request, res: Response)=>{
     try{
+        const userBusiness = new UserBusiness();
         const token = req.headers.authorization as string; 
-        const authenticator = new Authenticator();
-        const authenticationData = authenticator.verify(token);
-        const userId = authenticationData.id;
+        const users = await userBusiness.get(token);
 
-        const feedDatabase = FeedDatabase();
-        const feed = await feedDatabase.getFeed(userId);
-        const mappedFeed = feed.map((item:any)=>({
-            title: item.title,
-            photoPost: item.photoPost,
-            description: item.description
-        }))
-        res.status(200).send(mappedFeed)
+        res.status(200).send(users)
     }catch(err){
         res.status(400).send({
             message:err.message
