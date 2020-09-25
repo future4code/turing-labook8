@@ -11,5 +11,6 @@ export class FeedDatabase extends BaseDatabase{
             JOIN users
             ON Posts.user_id = users.id
         `)
+        return result[0]
     }
 }

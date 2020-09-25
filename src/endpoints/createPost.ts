@@ -3,6 +3,7 @@ import {BaseDatabase} from "../data/BaseDatabase";
 import {Authenticator} from "../services/Authenticator";
 import {IdGenerator} from "../services/IdGenerator";
 import {PostDatabase} from "../data/PostDatabase";
+import moment from "moment"
 
 export const createPost = async (req: Request, res: Response) => {
   try {
@@ -15,16 +16,16 @@ export const createPost = async (req: Request, res: Response) => {
     const postId = idGenerator.generateId();
 
     const {title, description, photoPost, typePost} = req.body;
-    const creationDate = Date.now();
+    const creationDate = moment().format("YYYY-MM-DD")
 
     const postDatabase = new PostDatabase();
     await postDatabase.createPost(
       postId,
-      title,
       userId,
-      description,
+      title,
       photoPost,
       typePost,
+      description,
       creationDate,
     );
     res.status(200).send({

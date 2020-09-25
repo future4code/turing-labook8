@@ -2,7 +2,7 @@ import {BaseDatabase} from "./BaseDatabase";
 import { User } from "../model/User";
 
 export class UserDatabase extends BaseDatabase {
-  private static TABLE_NAME: string = 'labook_users';
+  private static TABLE_NAME: string = 'users';
 
   public async registerUser(id: string, name: string, email: string, password: string): Promise<void> {
     await this.getConnection()

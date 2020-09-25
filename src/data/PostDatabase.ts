@@ -5,7 +5,7 @@ import { POST_TYPE } from '../model/Post'
 export class PostDatabase extends BaseDatabase {
   private static TABLE_NAME = 'Posts';
 
-  public async createPost(post_id: string, user_id: string, title: string, photoPost: string, typePost: POST_TYPE, description: string, createdAt: number): Promise<void> {
+  public async createPost(post_id: string, user_id: string, title: string, photoPost: string, typePost: POST_TYPE, description: string, createdAt: string): Promise<void> {
     await this.getConnection()
       .insert({
         post_id,
