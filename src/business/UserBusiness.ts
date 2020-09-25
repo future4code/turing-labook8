@@ -3,6 +3,7 @@ import { HashManager } from "../services/HashManager";
 import { UserDatabase } from "../data/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { UserRelationDatabase } from "../data/UserRelationDatabase";
+import { FeedDatabase } from "../data/FeedDatabase";
 
 export class UserBusiness {
 
@@ -105,4 +106,19 @@ export class UserBusiness {
 
     }
 
+    async get(token:string){
+        const authenticator = new Authenticator();
+        const authenticationData = authenticator.verify(token);
+        const userId = authenticationData.id;
+
+        const feedDatabase = new FeedDatabase();
+        const feed = await feedDatabase.getFeed(userId);
+        const mappedFeed = feed.map((item:any)=>({
+            title: item.title,
+            photoPost: item.photoPost,
+            description: item.description
+        }))
+
+        return mappedFeed
+    }
 }
